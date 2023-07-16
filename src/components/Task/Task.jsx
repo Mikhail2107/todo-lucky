@@ -1,34 +1,34 @@
-import { formatDistanceToNow } from 'date-fns';
-import PropTypes from 'prop-types';
-import './Task.css';
+import { formatDistanceToNow } from 'date-fns'
+import PropTypes from 'prop-types'
+import './Task.css'
 
 function Task(props) {
-  const { task, onDeleteTask, onCompleteTask, toCheck, onEditTask } = props;
-  const setTimeCreatedAgo = (date) => formatDistanceToNow(date, { addSuffix: true, includeSeconds: true });
+  const { task, onDeleteTask, onCompleteTask, toCheck, onEditTask } = props
+  const setTimeCreatedAgo = (date) => formatDistanceToNow(date, { addSuffix: true, includeSeconds: true })
 
   Task.defaultProps = {
     task: {},
     onDeleteTask: () => {},
     onCompleteTask: () => {},
     onEditTask: () => {},
-  };
+  }
   Task.propTypes = {
     task: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
     toCheck: PropTypes.string.isRequired,
     onDeleteTask: PropTypes.func,
     onCompleteTask: PropTypes.func,
     onEditTask: PropTypes.func,
-  };
+  }
 
   const taskClass = () => {
     if (!task.isCompleted && toCheck === 'Completed') {
-      return 'edit';
+      return 'edit'
     } else if (task.isCompleted && toCheck === 'Active') {
-      return 'edit';
+      return 'edit'
     } else {
-      return 'view';
+      return 'view'
     }
-  };
+  }
 
   return (
     <div>
@@ -42,7 +42,7 @@ function Task(props) {
         <button type="button" className="icon icon-destroy" onClick={() => onDeleteTask(task.id)} />
       </div>
     </div>
-  );
+  )
 }
 
-export default Task;
+export default Task

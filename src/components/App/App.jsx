@@ -1,9 +1,9 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
-import NewTaskForm from '../NewTaskForm';
-import TasksList from '../TasksList';
-import Footer from '../Footer';
-import './App.css';
+import NewTaskForm from '../NewTaskForm'
+import TasksList from '../TasksList'
+import Footer from '../Footer'
+import './App.css'
 
 class App extends Component {
   filters = [
@@ -19,7 +19,7 @@ class App extends Component {
       value: 'Completed',
       id: 3,
     },
-  ];
+  ]
 
   state = {
     targetId: '',
@@ -28,11 +28,11 @@ class App extends Component {
     toCheck: 'All',
     toEdit: false,
     tasks: [],
-  };
+  }
 
-  newId = 1;
+  newId = 1
 
-  onFilterOnClick = (e) => this.setState(() => ({ toCheck: e.target.textContent }));
+  onFilterOnClick = (e) => this.setState(() => ({ toCheck: e.target.textContent }))
 
   onAddTask = (value) => {
     const newTask = {
@@ -40,80 +40,80 @@ class App extends Component {
       id: this.newId++,
       isCompleted: false,
       whenCreated: new Date(),
-    };
-    const newTasksList = [...this.state.tasks, newTask];
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }));
-  };
+    }
+    const newTasksList = [...this.state.tasks, newTask]
+    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+  }
 
   onDeleteTask = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id);
-    const newTasksList = [...this.state.tasks.slice(0, index), ...this.state.tasks.slice(index + 1)];
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }));
-  };
+    const index = this.state.tasks.findIndex((task) => task.id === id)
+    const newTasksList = [...this.state.tasks.slice(0, index), ...this.state.tasks.slice(index + 1)]
+    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+  }
 
   onDeleteCompleteTasks = () => {
-    const notCompleteTasks = this.state.tasks.filter((task) => !task.isCompleted);
-    this.setState((prevState) => ({ ...prevState, tasks: notCompleteTasks }));
-  };
+    const notCompleteTasks = this.state.tasks.filter((task) => !task.isCompleted)
+    this.setState((prevState) => ({ ...prevState, tasks: notCompleteTasks }))
+  }
 
   onInputChange = (e) => {
     if (e.target.id === 'newTaskFormInput') {
-      return this.setState({ inputValue: e.target.value });
+      return this.setState({ inputValue: e.target.value })
     }
-    return this.setState({ inputTaskValue: e.target.value });
-  };
+    return this.setState({ inputTaskValue: e.target.value })
+  }
 
   onSubmit = (e, id) => {
-    e.preventDefault();
-    const value = this.state.inputValue.trim();
-    const newValueTask = this.state.inputTaskValue.trim();
+    e.preventDefault()
+    const value = this.state.inputValue.trim()
+    const newValueTask = this.state.inputTaskValue.trim()
     if (e.target.id === 'newTaskForm' && value) {
-      this.onAddTask(value);
-      this.setState(() => ({ inputValue: '' }));
+      this.onAddTask(value)
+      this.setState(() => ({ inputValue: '' }))
     } else if (e.target.id !== 'newTaskForm' && newValueTask) {
-      const index = this.state.tasks.findIndex((task) => task.id === id);
+      const index = this.state.tasks.findIndex((task) => task.id === id)
       const taskWithNewValue = {
         ...this.state.tasks[index],
         value: newValueTask,
-      };
-      const newTaskList = [...this.state.tasks.slice(0, index), taskWithNewValue, ...this.state.tasks.slice(index + 1)];
+      }
+      const newTaskList = [...this.state.tasks.slice(0, index), taskWithNewValue, ...this.state.tasks.slice(index + 1)]
       this.setState((prevState) => ({
         ...prevState,
         tasks: newTaskList,
         inputTaskValue: '',
         targetId: '',
         toEdit: !prevState.toEdit,
-      }));
+      }))
     }
-  };
+  }
 
   onCompleteTask = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id);
+    const index = this.state.tasks.findIndex((task) => task.id === id)
     const taskWithNewState = {
       ...this.state.tasks[index],
       isCompleted: !this.state.tasks[index].isCompleted,
-    };
-    const newTasksList = [...this.state.tasks.slice(0, index), taskWithNewState, ...this.state.tasks.slice(index + 1)];
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }));
-  };
+    }
+    const newTasksList = [...this.state.tasks.slice(0, index), taskWithNewState, ...this.state.tasks.slice(index + 1)]
+    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+  }
 
   onEditTask = (e, id, task) => {
     if (!this.state.toEdit && !task.isCompleted) {
       this.setState((prevState) => ({
         toEdit: !prevState.toEdit,
         targetId: e.target.id,
-      }));
-      this.onTaskChange(id);
+      }))
+      this.onTaskChange(id)
     }
-  };
+  }
 
   onTaskChange = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id);
-    this.setState((prevState) => ({ ...prevState, inputTaskValue: prevState.tasks[index].value }));
-  };
+    const index = this.state.tasks.findIndex((task) => task.id === id)
+    this.setState((prevState) => ({ ...prevState, inputTaskValue: prevState.tasks[index].value }))
+  }
 
   render() {
-    const activeTasks = this.state.tasks.filter((task) => !task.isCompleted).length;
+    const activeTasks = this.state.tasks.filter((task) => !task.isCompleted).length
 
     return (
       <section className="todoapp">
@@ -143,8 +143,8 @@ class App extends Component {
           />
         </section>
       </section>
-    );
+    )
   }
 }
 
-export default App;
+export default App

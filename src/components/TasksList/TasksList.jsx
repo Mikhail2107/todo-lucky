@@ -1,7 +1,7 @@
-import './TasksList.css';
-import PropTypes from 'prop-types';
+import './TasksList.css'
+import PropTypes from 'prop-types'
 
-import Task from '../Task';
+import Task from '../Task'
 
 function TasksList(props) {
   const {
@@ -15,14 +15,14 @@ function TasksList(props) {
     onEditTask,
     toEdit,
     targetId,
-  } = props;
+  } = props
 
   TasksList.defaultProps = {
     tasks: [],
     inputTaskValue: '',
     onInputChange: () => {},
     onSubmit: () => {},
-  };
+  }
   TasksList.propTypes = {
     toEdit: PropTypes.bool.isRequired,
     toCheck: PropTypes.string.isRequired,
@@ -31,17 +31,17 @@ function TasksList(props) {
     onSubmit: PropTypes.func,
     inputTaskValue: PropTypes.string,
     onInputChange: PropTypes.func,
-  };
+  }
 
   const taskClass = (task) => {
     if (task.isCompleted) {
-      return 'completed';
+      return 'completed'
     } else if (task.id === Number(targetId) && toEdit && !task.isCompleted && toCheck !== 'Completed') {
-      return 'editing';
+      return 'editing'
     } else {
-      return '';
+      return ''
     }
-  };
+  }
 
   return (
     <ul className="todo-list">
@@ -65,7 +65,7 @@ function TasksList(props) {
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
-export default TasksList;
+export default TasksList

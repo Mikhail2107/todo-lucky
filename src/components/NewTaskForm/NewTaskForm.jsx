@@ -25,6 +25,16 @@ function NewTaskForm(props) {
         placeholder="What needs to be done?"
         autoFocus
       />
+      <input id="min"
+            className="new-todo-form__timer" 
+            type="text" 
+            autoFocus 
+            placeholder="MIN" />
+      <input id="sec"
+            className="new-todo-form__timer" 
+            type="text" 
+            autoFocus 
+            placeholder="SEC" />
     </form>
   )
 }

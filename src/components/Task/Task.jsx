@@ -34,6 +34,7 @@ function Task(props) {
     <div>
       <div className={taskClass()}>
         <input className="toggle" type="checkbox" onClick={() => onCompleteTask(task.id)} id={task.id} />
+        
         <label htmlFor={task.id}>
           <span className="description">{task.value}</span>
           <span className="created">created {setTimeCreatedAgo(task.whenCreated)}</span>

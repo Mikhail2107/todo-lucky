@@ -59,13 +59,7 @@ function TasksList(props) {
           />
           <form onSubmit={(e) => onSubmit(e, task.id)}>
             {isEditing ? (
-              <input
-                autoFocus={true}
-                type="text"
-                className="edit"
-                value={inputTaskValue}
-                onChange={onInputChange}
-              />
+              <input autoFocus={true} type="text" className="edit" value={inputTaskValue} onChange={onInputChange} />
             ) : (
               ''
             )}

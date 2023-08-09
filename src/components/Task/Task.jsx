@@ -135,12 +135,7 @@ class Task extends Component {
             </div>
             <span className="created">created {setTimeCreatedAgo(task.whenCreated)}</span>
           </label>
-          <button
-            type="button"
-            className="icon icon-edit"
-            onClick={(e) => onEditTask(e, task.id, task)}
-            id={task.id}
-          />
+          <button type="button" className="icon icon-edit" onClick={(e) => onEditTask(e, task.id, task)} id={task.id} />
           <button type="button" className="icon icon-destroy" onClick={() => onDeleteTask(task.id)} />
         </div>
       </div>

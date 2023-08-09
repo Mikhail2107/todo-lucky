@@ -37,7 +37,7 @@ class App extends Component {
 
   onFilterOnClick = (e) => this.setState(() => ({ isSelected: e.target.textContent }))
 
-  handleAddTask = (value) => {
+  onAddTask = (value) => {
     const minutes = +this.state.minutesValue
     let newMinutes
     let newHours
@@ -63,18 +63,18 @@ class App extends Component {
     this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
   }
 
-  handleDeleteTask = (id) => {
+  onDeleteTask = (id) => {
     const index = this.state.tasks.findIndex((task) => task.id === id)
     const newTasksList = [...this.state.tasks.slice(0, index), ...this.state.tasks.slice(index + 1)]
     this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
   }
 
-  handleDeleteCompleteTasks = () => {
+  onDeleteCompleteTasks = () => {
     const notCompleteTasks = this.state.tasks.filter((task) => !task.isCompleted)
     this.setState((prevState) => ({ ...prevState, tasks: notCompleteTasks }))
   }
 
-  handleInputChange = (e) => {
+  onInputChange = (e) => {
     if (e.target.id === 'newTaskFormInput') {
       this.setState({ inputValue: e.target.value })
     }
@@ -87,12 +87,12 @@ class App extends Component {
     this.setState({ inputTaskValue: e.target.value })
   }
 
-  handleSubmit = (e, id) => {
+  onSubmit = (e, id) => {
     e.preventDefault()
     const value = this.state.inputValue.trim()
     const newValueTask = this.state.inputTaskValue.trim()
     if (e.target.id === 'newTaskForm') {
-      this.handleAddTask(value)
+      this.onAddTask(value)
       this.setState((prevState) => ({
         ...prevState,
         inputValue: '',
@@ -117,7 +117,7 @@ class App extends Component {
     }
   }
 
-  handleCompleteTask = (id) => {
+  onCompleteTask = (id) => {
     const index = this.state.tasks.findIndex((task) => task.id === id)
     const taskWithNewState = {
       ...this.state.tasks[index],
@@ -127,17 +127,17 @@ class App extends Component {
     this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
   }
 
-  handleEditTask = (e, id, task) => {
+  onEditTask = (e, id, task) => {
     if (!this.state.isEditing && !task.isCompleted) {
       this.setState((prevState) => ({
         isEditing: !prevState.isEditing,
         targetId: e.target.id,
       }))
-      this.handleTaskChange(id)
+      this.onTaskChange(id)
     }
   }
 
-  handleTaskChange = (id) => {
+  onTaskChange = (id) => {
     const index = this.state.tasks.findIndex((task) => task.id === id)
     this.setState((prevState) => ({ ...prevState, inputTaskValue: prevState.tasks[index].value }))
   }
@@ -153,8 +153,8 @@ class App extends Component {
             inputValue={this.state.inputValue}
             minutes={this.state.minutesValue}
             seconds={this.state.secondsValue}
-            handleSubmit={this.handleSubmit}
-            handleInputChange={this.handleInputChange}
+            onSubmit={this.onSubmit}
+            onInputChange={this.onInputChange}
           />
         </header>
         <section className="main">
@@ -164,19 +164,19 @@ class App extends Component {
             isSelected={this.state.isSelected}
             isEditing={this.state.isEditing}
             targetId={this.state.targetId}
-            handleInputChange={this.handleInputChange}
-            handleSubmit={this.handleSubmit}
-            handleEditTask={this.handleEditTask}
-            handleCompleteTask={this.handleCompleteTask}
-            handleDeleteTask={this.handleDeleteTask}
-            handleClick={this.handleClickPlayPause}
+            onInputChange={this.onInputChange}
+            onSubmit={this.onSubmit}
+            onEditTask={this.onEditTask}
+            onCompleteTask={this.onCompleteTask}
+            onDeleteTask={this.onDeleteTask}
+            onClick={this.onClickPlayPause}
           />
           <Footer
             activeTasks={activeTasks}
             filters={this.filters}
             isSelected={this.state.isSelected}
-            handleDeleteCompleteTasks={this.handleDeleteCompleteTasks}
-            handleFilterOnClick={this.handleFilterOnClick}
+            onDeleteCompleteTasks={this.onDeleteCompleteTasks}
+            onFilterOnClick={this.onFilterOnClick}
           />
         </section>
       </section>

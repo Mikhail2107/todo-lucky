@@ -6,37 +6,38 @@ import Task from '../Task'
 function TasksList(props) {
   const {
     tasks,
-    onDeleteTask,
-    toCheck,
-    onCompleteTask,
-    onSubmit,
+    handleDeleteTask,
+    isSelected,
+    handleCompleteTask,
+    handleSubmit,
     inputTaskValue,
-    onInputChange,
-    onEditTask,
-    toEdit,
+    handleInputChange,
+    handleEditTask,
+    isEditing,
     targetId,
+    handleClick,
   } = props
 
   TasksList.defaultProps = {
     tasks: [],
     inputTaskValue: '',
-    onInputChange: () => {},
-    onSubmit: () => {},
+    handleInputChange: () => {},
+    handleSubmit: () => {},
   }
   TasksList.propTypes = {
-    toEdit: PropTypes.bool.isRequired,
-    toCheck: PropTypes.string.isRequired,
+    isEditing: PropTypes.bool.isRequired,
+    isSelected: PropTypes.string.isRequired,
     targetId: PropTypes.string.isRequired,
     tasks: PropTypes.arrayOf(PropTypes.object),
-    onSubmit: PropTypes.func,
+    handleSubmit: PropTypes.func,
     inputTaskValue: PropTypes.string,
-    onInputChange: PropTypes.func,
+    handleInputChange: PropTypes.func,
   }
 
   const taskClass = (task) => {
     if (task.isCompleted) {
       return 'completed'
-    } else if (task.id === Number(targetId) && toEdit && !task.isCompleted && toCheck !== 'Completed') {
+    } else if (task.id === Number(targetId) && isEditing && !task.isCompleted && isSelected !== 'Completed') {
       return 'editing'
     } else {
       return ''
@@ -48,16 +49,23 @@ function TasksList(props) {
       {tasks.map((task) => (
         <li className={taskClass(task)} key={task.id}>
           <Task
-            toEdit={toEdit}
-            toCheck={toCheck}
+            isEditing={isEditing}
+            isSelected={isSelected}
             task={task}
-            onDeleteTask={onDeleteTask}
-            onCompleteTask={onCompleteTask}
-            onEditTask={onEditTask}
+            handleDeleteTask={handleDeleteTask}
+            handleCompleteTask={handleCompleteTask}
+            handleEditTask={handleEditTask}
+            handleClick={handleClick}
           />
-          <form onSubmit={(e) => onSubmit(e, task.id)}>
-            {toEdit ? (
-              <input autoFocus={true} type="text" className="edit" value={inputTaskValue} onChange={onInputChange} />
+          <form onSubmit={(e) => handleSubmit(e, task.id)}>
+            {isEditing ? (
+              <input
+                autoFocus={true}
+                type="text"
+                className="edit"
+                value={inputTaskValue}
+                onChange={handleInputChange}
+              />
             ) : (
               ''
             )}

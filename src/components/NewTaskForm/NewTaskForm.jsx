@@ -2,24 +2,24 @@ import PropTypes from 'prop-types'
 import './NewTaskForm.css'
 
 function NewTaskForm(props) {
-  const { handleSubmit, handleInputChange, inputValue, minutes, seconds } = props
+  const { onSubmit, onInputChange, inputValue, minutes, seconds } = props
 
   NewTaskForm.defaultProps = {
-    handleSubmit: () => {},
-    handleInputChange: () => {},
+    onSubmit: () => {},
+    onInputChange: () => {},
     inputValue: '',
   }
   NewTaskForm.propTypes = {
     inputValue: PropTypes.string,
-    handleInputChange: PropTypes.func,
-    handleSubmit: PropTypes.func,
+    onInputChange: PropTypes.func,
+    onSubmit: PropTypes.func,
   }
 
   return (
-    <form className="new-todo-form" onSubmit={handleSubmit} id="newTaskForm">
+    <form className="new-todo-form" onSubmit={onSubmit} id="newTaskForm">
       <input
         id="newTaskFormInput"
-        onChange={handleInputChange}
+        onChange={onInputChange}
         value={inputValue}
         className="new-todo"
         placeholder="What needs to be done?"
@@ -28,7 +28,7 @@ function NewTaskForm(props) {
       />
       <input
         id="min"
-        onChange={handleInputChange}
+        onChange={onInputChange}
         value={minutes}
         type="number"
         min="0"
@@ -38,7 +38,7 @@ function NewTaskForm(props) {
       />
       <input
         id="sec"
-        onChange={handleInputChange}
+        onChange={onInputChange}
         value={seconds}
         type="number"
         min="0"
@@ -47,7 +47,7 @@ function NewTaskForm(props) {
         placeholder="Sec"
         required={true}
       />
-      <button type="submit" onSubmit={handleSubmit} />
+      <button type="submit" onSubmit={onSubmit} />
     </form>
   )
 }

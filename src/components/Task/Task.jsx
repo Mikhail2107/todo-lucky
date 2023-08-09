@@ -12,18 +12,18 @@ class Task extends Component {
       hours: +props.task.hours,
       minutes: +props.task.minutes,
       seconds: +props.task.seconds,
-      isPaused: false,
-      isPlay: false,
+      toPause: false,
+      toStart: false,
     }
-    this.handleClickPlayPause = this.handleClickPlayPause.bind(this)
-    this.handleTimerPlay = this.handleTimerPlay.bind(this)
+    this.onClickPlayPause = this.onClickPlayPause.bind(this)
+    this.onTimerStart = this.onTimerStart.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.isPlay !== this.state.isPlay) {
-      this.handleTimerPlay()
+    if (prevState.toStart !== this.state.toStart) {
+      this.onTimerStart()
     }
-    if (prevState.isPaused !== this.state.isPaused) {
+    if (prevState.toPause !== this.state.toPause) {
       clearInterval(this.timer)
     }
 
@@ -33,34 +33,34 @@ class Task extends Component {
       this.state.seconds === 0 &&
       this.state.minutes === 0
     ) {
-      this.props.handleCompleteTask(this.state.id)
+      this.props.onCompleteTask(this.state.id)
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.timer)
-    if (this.state.isPaused) {
+    if (this.state.toPause) {
       clearInterval(this.timer)
     }
   }
 
-  handleClickPlayPause = (e) => {
-    if (e.target.id === 'play' && !this.state.isPlay) {
-      this.setState((prevState) => ({ ...prevState, isPlay: !prevState.isPlay, isPaused: prevState.isPlay }))
+  onClickPlayPause = (e) => {
+    if (e.target.id === 'play' && !this.state.toStart) {
+      this.setState((prevState) => ({ ...prevState, toStart: !prevState.toStart, toPause: prevState.toStart }))
     }
-    if (e.target.id === 'pause' && !this.state.isPaused && this.state.isPlay) {
-      this.setState((prevState) => ({ ...prevState, isPlay: prevState.isPaused, isPaused: !prevState.isPaused }))
+    if (e.target.id === 'pause' && !this.state.toPause && this.state.toStart) {
+      this.setState((prevState) => ({ ...prevState, toStart: prevState.toPause, toPause: !prevState.toPause }))
     }
   }
 
-  handleTimerPlay() {
+  onTimerStart() {
     this.timer = setInterval(() => {
       if (this.state.hours === 0 && this.state.seconds === 0 && this.state.minutes === 0) {
         clearInterval(this.timer)
-        this.setState((prevState) => ({ ...prevState, isPlay: false }))
+        this.setState((prevState) => ({ ...prevState, toStart: false }))
         return
       }
-      if (this.state.isPaused) {
+      if (this.state.toPause) {
         clearInterval(this.timer)
         return
       }
@@ -79,7 +79,7 @@ class Task extends Component {
   }
 
   render() {
-    const { task, handleDeleteTask, handleCompleteTask, isSelected, handleEditTask } = this.props
+    const { task, onDeleteTask, onCompleteTask, isSelected, onEditTask } = this.props
     const { hours, minutes, seconds } = this.state
     const setTimeCreatedAgo = (date) => formatDistanceToNow(date, { addSuffix: true, includeSeconds: true })
     const taskClass = () => {
@@ -107,7 +107,7 @@ class Task extends Component {
           <input
             className="toggle"
             type="checkbox"
-            onChange={() => handleCompleteTask(task.id)}
+            onChange={() => onCompleteTask(task.id)}
             id={task.id}
             checked={task.isCompleted}
           />
@@ -118,14 +118,14 @@ class Task extends Component {
                 <button
                   id="play"
                   type="button"
-                  className={this.state.isPlay ? 'icon icon-play active-play' : 'icon icon-play'}
-                  onClick={this.handleClickPlayPause}
+                  className={this.state.toStart ? 'icon icon-play active-play' : 'icon icon-play'}
+                  onClick={this.onClickPlayPause}
                 />
                 <button
                   id="pause"
                   type="button"
-                  className={this.state.isPaused ? 'icon icon-pause active-pause' : 'icon icon-pause'}
-                  onClick={this.handleClickPlayPause}
+                  className={this.state.toPause ? 'icon icon-pause active-pause' : 'icon icon-pause'}
+                  onClick={this.onClickPlayPause}
                 />
               </div>
               <div className="time-text">
@@ -138,10 +138,10 @@ class Task extends Component {
           <button
             type="button"
             className="icon icon-edit"
-            onClick={(e) => handleEditTask(e, task.id, task)}
+            onClick={(e) => onEditTask(e, task.id, task)}
             id={task.id}
           />
-          <button type="button" className="icon icon-destroy" onClick={() => handleDeleteTask(task.id)} />
+          <button type="button" className="icon icon-destroy" onClick={() => onDeleteTask(task.id)} />
         </div>
       </div>
     )
@@ -152,15 +152,15 @@ export default Task
 
 Task.defaultProps = {
   task: {},
-  handleDeleteTask: () => {},
-  handleCompleteTask: () => {},
-  handleEditTask: () => {},
+  onDeleteTask: () => {},
+  onCompleteTask: () => {},
+  onEditTask: () => {},
 }
 
 Task.propTypes = {
   task: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   isSelected: PropTypes.string.isRequired,
-  handleDeleteTask: PropTypes.func,
-  handleCompleteTask: PropTypes.func,
-  handleEditTask: PropTypes.func,
+  onDeleteTask: PropTypes.func,
+  onCompleteTask: PropTypes.func,
+  onEditTask: PropTypes.func,
 }

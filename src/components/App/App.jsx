@@ -35,7 +35,7 @@ class App extends Component {
 
   newId = 1
 
-  handleFilterOnClick = (e) => this.setState(() => ({ isSelected: e.target.textContent }))
+  onFilterOnClick = (e) => this.setState(() => ({ isSelected: e.target.textContent }))
 
   handleAddTask = (value) => {
     const minutes = +this.state.minutesValue
@@ -56,8 +56,8 @@ class App extends Component {
       seconds: this.state.secondsValue,
       minutes: newMinutes,
       hours: newHours,
-      isPlay: false,
-      isPaused: false,
+      toStart: false,
+      toPause: false,
     }
     const newTasksList = [...this.state.tasks, newTask]
     this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))

@@ -6,32 +6,32 @@ import Task from '../Task'
 function TasksList(props) {
   const {
     tasks,
-    handleDeleteTask,
+    onDeleteTask,
     isSelected,
-    handleCompleteTask,
-    handleSubmit,
+    onCompleteTask,
+    onSubmit,
     inputTaskValue,
-    handleInputChange,
-    handleEditTask,
+    onInputChange,
+    onEditTask,
     isEditing,
     targetId,
-    handleClick,
+    onClick,
   } = props
 
   TasksList.defaultProps = {
     tasks: [],
     inputTaskValue: '',
-    handleInputChange: () => {},
-    handleSubmit: () => {},
+    onInputChange: () => {},
+    onSubmit: () => {},
   }
   TasksList.propTypes = {
     isEditing: PropTypes.bool.isRequired,
     isSelected: PropTypes.string.isRequired,
     targetId: PropTypes.string.isRequired,
     tasks: PropTypes.arrayOf(PropTypes.object),
-    handleSubmit: PropTypes.func,
+    onSubmit: PropTypes.func,
     inputTaskValue: PropTypes.string,
-    handleInputChange: PropTypes.func,
+    onInputChange: PropTypes.func,
   }
 
   const taskClass = (task) => {
@@ -52,19 +52,19 @@ function TasksList(props) {
             isEditing={isEditing}
             isSelected={isSelected}
             task={task}
-            handleDeleteTask={handleDeleteTask}
-            handleCompleteTask={handleCompleteTask}
-            handleEditTask={handleEditTask}
-            handleClick={handleClick}
+            onDeleteTask={onDeleteTask}
+            onCompleteTask={onCompleteTask}
+            onEditTask={onEditTask}
+            onClick={onClick}
           />
-          <form onSubmit={(e) => handleSubmit(e, task.id)}>
+          <form onSubmit={(e) => onSubmit(e, task.id)}>
             {isEditing ? (
               <input
                 autoFocus={true}
                 type="text"
                 className="edit"
                 value={inputTaskValue}
-                onChange={handleInputChange}
+                onChange={onInputChange}
               />
             ) : (
               ''

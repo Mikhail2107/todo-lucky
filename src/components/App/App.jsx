@@ -1,12 +1,14 @@
-import { Component } from 'react'
+import { useState } from 'react'
 
 import NewTaskForm from '../NewTaskForm'
 import TasksList from '../TasksList'
 import Footer from '../Footer'
 import './App.css'
 
-class App extends Component {
-  filters = [
+let newId = 0
+
+function App() {
+  const filters = [
     {
       value: 'All',
       id: 1,
@@ -21,24 +23,17 @@ class App extends Component {
     },
   ]
 
-  state = {
-    targetId: '',
-    inputValue: '',
-    hoursValue: '',
-    minutesValue: '',
-    secondsValue: '',
-    inputTaskValue: '',
-    isSelected: 'All',
-    isEditing: false,
-    tasks: [],
-  }
+  const [isSelected, setSelected] = useState({ value: 'All' })
+  const [tasks, setTasks] = useState({ value: [] })
+  const [time, setTime] = useState({ hoursValue: '', minutesValue: '', secondsValue: '' })
+  const [input, setInputValue] = useState({ value: '', taskValue: '' })
+  const [isEditing, editTask] = useState({ edit: false, targetId: '' })
 
-  newId = 1
+  const onFilterOnClick = (e) => setSelected((prevState) => ({ ...prevState, value: e.target.textContent }))
 
-  onFilterOnClick = (e) => this.setState(() => ({ isSelected: e.target.textContent }))
-
-  onAddTask = (value) => {
-    const minutes = +this.state.minutesValue
+  const onAddTask = (value) => {
+    newId++
+    const minutes = +time.minutesValue
     let newMinutes
     let newHours
     if (minutes > 60) {
@@ -50,138 +45,127 @@ class App extends Component {
     }
     const newTask = {
       value,
-      id: this.newId++,
+      id: newId,
       isCompleted: false,
       whenCreated: new Date(),
-      seconds: this.state.secondsValue,
+      seconds: time.secondsValue,
       minutes: newMinutes,
       hours: newHours,
-      toStart: false,
-      toPause: false,
     }
-    const newTasksList = [...this.state.tasks, newTask]
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+    const newTasksList = [...tasks.value, newTask]
+    setTasks(() => ({ value: newTasksList }))
   }
 
-  onDeleteTask = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id)
-    const newTasksList = [...this.state.tasks.slice(0, index), ...this.state.tasks.slice(index + 1)]
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+  const onDeleteTask = (id) => {
+    const index = tasks.value.findIndex((task) => task.id === id)
+    const newTasksList = [...tasks.value.slice(0, index), ...tasks.value.slice(index + 1)]
+    setTasks((prevState) => ({ ...prevState, value: newTasksList }))
   }
 
-  onDeleteCompleteTasks = () => {
-    const notCompleteTasks = this.state.tasks.filter((task) => !task.isCompleted)
-    this.setState((prevState) => ({ ...prevState, tasks: notCompleteTasks }))
+  const onDeleteCompleteTasks = () => {
+    const notCompleteTasks = tasks.value.filter((task) => !task.isCompleted)
+    setTasks((prevState) => ({ ...prevState, value: notCompleteTasks }))
   }
 
-  onInputChange = (e) => {
+  const onInputChange = (e) => {
     if (e.target.id === 'newTaskFormInput') {
-      this.setState({ inputValue: e.target.value })
+      setInputValue((prevState) => ({ ...prevState, value: e.target.value }))
     }
     if (e.target.id === 'min') {
-      this.setState({ minutesValue: e.target.value })
+      setTime((prevState) => ({ ...prevState, minutesValue: e.target.value }))
     }
     if (e.target.id === 'sec') {
-      this.setState({ secondsValue: e.target.value })
+      setTime((prevState) => ({ ...prevState, secondsValue: e.target.value }))
     }
-    this.setState({ inputTaskValue: e.target.value })
+    setInputValue((prevState) => ({ ...prevState, taskValue: e.target.value }))
   }
 
-  onSubmit = (e, id) => {
+  const onSubmit = (e, id) => {
     e.preventDefault()
-    const value = this.state.inputValue.trim()
-    const newValueTask = this.state.inputTaskValue.trim()
+    const value = input.value.trim()
+    const newValueTask = input.taskValue.trim()
     if (e.target.id === 'newTaskForm') {
-      this.onAddTask(value)
-      this.setState((prevState) => ({
-        ...prevState,
-        inputValue: '',
-        hoursValue: '',
-        minutesValue: '',
-        secondsValue: '',
-      }))
+      onAddTask(value)
+      setTime((prevState) => ({ ...prevState, hoursValue: '', minutesValue: '', secondsValue: '' }))
+      setInputValue((prevState) => ({ ...prevState, value: '' }))
     } else if (e.target.id !== 'newTaskForm' && newValueTask) {
-      const index = this.state.tasks.findIndex((task) => task.id === id)
+      const index = tasks.value.findIndex((task) => task.id === id)
       const taskWithNewValue = {
-        ...this.state.tasks[index],
+        ...tasks.value[index],
         value: newValueTask,
       }
-      const newTaskList = [...this.state.tasks.slice(0, index), taskWithNewValue, ...this.state.tasks.slice(index + 1)]
-      this.setState((prevState) => ({
-        ...prevState,
-        tasks: newTaskList,
-        inputTaskValue: '',
+      const newTaskList = [...tasks.value.slice(0, index), taskWithNewValue, ...tasks.value.slice(index + 1)]
+      setTasks((prevState) => ({ ...prevState, value: newTaskList }))
+      setInputValue((prevState) => ({ ...prevState, taskValue: '' }))
+      editTask(() => ({
+        edit: !isEditing.edit,
         targetId: '',
-        isEditing: !prevState.isEditing,
       }))
     }
   }
 
-  onCompleteTask = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id)
+  const onCompleteTask = (id) => {
+    const index = tasks.value.findIndex((task) => task.id === id)
     const taskWithNewState = {
-      ...this.state.tasks[index],
-      isCompleted: !this.state.tasks[index].isCompleted,
+      ...tasks.value[index],
+      isCompleted: !tasks.value[index].isCompleted,
     }
-    const newTasksList = [...this.state.tasks.slice(0, index), taskWithNewState, ...this.state.tasks.slice(index + 1)]
-    this.setState((prevState) => ({ ...prevState, tasks: newTasksList }))
+    const newTasksList = [...tasks.value.slice(0, index), taskWithNewState, ...tasks.value.slice(index + 1)]
+    setTasks((prevState) => ({ ...prevState, value: newTasksList }))
   }
 
-  onEditTask = (e, id, task) => {
-    if (!this.state.isEditing && !task.isCompleted) {
-      this.setState((prevState) => ({
-        isEditing: !prevState.isEditing,
+  const onTaskChange = (id) => {
+    const index = tasks.value.findIndex((task) => task.id === id)
+    setInputValue((prevState) => ({ ...prevState, taskValue: tasks.value[index].value }))
+  }
+
+  const onEditTask = (e, id, task) => {
+    if (!isEditing.edit && !task.isCompleted) {
+      editTask((prevState) => ({
+        edit: !prevState.isEditing,
         targetId: e.target.id,
       }))
-      this.onTaskChange(id)
+      onTaskChange(id)
     }
   }
 
-  onTaskChange = (id) => {
-    const index = this.state.tasks.findIndex((task) => task.id === id)
-    this.setState((prevState) => ({ ...prevState, inputTaskValue: prevState.tasks[index].value }))
-  }
+  const activeTasks = tasks.value.filter((task) => !task.isCompleted).length
 
-  render() {
-    const activeTasks = this.state.tasks.filter((task) => !task.isCompleted).length
-
-    return (
-      <section className="todoapp">
-        <header className="header">
-          <h1>Todos</h1>
-          <NewTaskForm
-            inputValue={this.state.inputValue}
-            minutes={this.state.minutesValue}
-            seconds={this.state.secondsValue}
-            onSubmit={this.onSubmit}
-            onInputChange={this.onInputChange}
-          />
-        </header>
-        <section className="main">
-          <TasksList
-            tasks={this.state.tasks}
-            inputTaskValue={this.state.inputTaskValue}
-            isSelected={this.state.isSelected}
-            isEditing={this.state.isEditing}
-            targetId={this.state.targetId}
-            onInputChange={this.onInputChange}
-            onSubmit={this.onSubmit}
-            onEditTask={this.onEditTask}
-            onCompleteTask={this.onCompleteTask}
-            onDeleteTask={this.onDeleteTask}
-            onClick={this.onClickPlayPause}
-          />
-          <Footer
-            activeTasks={activeTasks}
-            filters={this.filters}
-            isSelected={this.state.isSelected}
-            onDeleteCompleteTasks={this.onDeleteCompleteTasks}
-            onFilterOnClick={this.onFilterOnClick}
-          />
-        </section>
+  return (
+    <section className="todoapp">
+      <header className="header">
+        <h1>Todos</h1>
+        <NewTaskForm
+          inputValue={input.value}
+          minutes={time.minutesValue}
+          seconds={time.secondsValue}
+          onSubmit={onSubmit}
+          onInputChange={onInputChange}
+        />
+      </header>
+      <section className="main">
+        <TasksList
+          tasks={tasks.value}
+          inputTaskValue={input.taskValue}
+          isSelected={isSelected.value}
+          isEditing={isEditing.edit}
+          targetId={isEditing.targetId}
+          onInputChange={onInputChange}
+          onSubmit={onSubmit}
+          onEditTask={onEditTask}
+          onCompleteTask={onCompleteTask}
+          onDeleteTask={onDeleteTask}
+        />
+        <Footer
+          activeTasks={activeTasks}
+          filters={filters}
+          isSelected={isSelected.value}
+          onDeleteCompleteTasks={onDeleteCompleteTasks}
+          onFilterOnClick={onFilterOnClick}
+        />
       </section>
-    )
-  }
+    </section>
+  )
 }
 
 export default App
